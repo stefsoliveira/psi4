@@ -22,7 +22,7 @@ CREATE OR REPLACE PUMP "pump_to_feed_final_stream" AS
                 WHEN (80.0 <= "TEMP_MED") AND ("TEMP_MED" <= 112.0) AND ("UMID_MED" <= 0.13) 
                 THEN (- 42.379 + 2.04901523 * "TEMP_MED" + 10.14333127 * "UMID_MED"- 0.22475541 * "TEMP_MED" * "UMID_MED" - POWER(6.83783, -3) * POWER("TEMP_MED", 2)  - POWER(5.481717, -2) * POWER("UMID_MED", 2) + POWER(1.22874, -5) * POWER("TEMP_MED", 2) * "UMID_MED" - POWER(8.5282, -4) * "TEMP_MED" * POWER("UMID_MED", 2) - POWER(1.99, -6) * POWER("TEMP_MED", 2) * POWER("UMID_MED", 2)) - (3.25 - 0.25 * "UMID_MED") * ((17 - abs("TEMP_MED"-95)) / 17) * 0.5
                 
-                --third case: 80<=T<=87F and RH<=85%
+                --third case: 80<=T<=87F and RH>85%
                 WHEN (80 <= "TEMP_MED") AND ("TEMP_MED" <= 87) AND "UMID_MED" > 0.85
                 THEN ( - 42.379 + 2.04901523 * "TEMP_MED" + 10.14333127 * "UMID_MED"- 0.22475541 * "TEMP_MED" * "UMID_MED" - POWER(6.83783, -3) * POWER("TEMP_MED", 2)- POWER(5.481717, -2) * POWER("UMID_MED", 2) + POWER(1.22874, -5) * POWER("TEMP_MED", 2) * "UMID_MED" - POWER(8.5282, -4) * "TEMP_MED" * POWER("UMID_MED", 2) - POWER(1.99, -6) * POWER("TEMP_MED", 2) * POWER("UMID_MED", 2)) + (0.02 * ("UMID_MED" - 85) * (87 - "TEMP_MED"))
             
