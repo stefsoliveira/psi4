@@ -1,11 +1,11 @@
-CREATE OR REPLACE STREAM "INITIAL_STREAM"  ("TEMP_MED"   decimal, "UMID_MED"  decimal, "DT_MEDICAO" varchar, "DC_NOME" varchar);
-CREATE OR REPLACE STREAM "FINAL_STREAM" ("heat_index" decimal,"TEMP_MED"   decimal,"UMID_MED"  decimal, "DT_MEDICAO" varchar,"DC_NOME" varchar);
+CREATE OR REPLACE STREAM "INITIAL_STREAM"  ("TEMP_MED"   decimal, "UMID_MED"  decimal, "DT_MEDICAO" varchar(16), "DC_NOME" varchar(8));
+CREATE OR REPLACE STREAM "FINAL_STREAM" ("heat_index" decimal,"TEMP_MED"   decimal,"UMID_MED"  decimal, "DT_MEDICAO" varchar(16),"DC_NOME" varchar(8));
 
 CREATE OR REPLACE PUMP "first_pump_to_initial_stream" AS   
     INSERT INTO "INITIAL_STREAM"
     SELECT STREAM 
          (( 1.8 * "TEMP_MED") + 32),  --temp em fahrenheit
-         ("UMID_MED" / 100), --umid em porcentagem
+         ("UMID_MED" / 100), --umid em decimal
          ("DT_MEDICAO"),
          ("DC_NOME")
     FROM   "SOURCE_SQL_STREAM_001";
@@ -29,8 +29,8 @@ CREATE OR REPLACE PUMP "pump_to_feed_final_stream" AS
             --last case: 
             ELSE ( - 42.379 + 2.04901523 * "TEMP_MED" + 10.14333127 * "UMID_MED" - 0.22475541 * "TEMP_MED" * "UMID_MED" - POWER(6.83783, -3) * POWER("TEMP_MED", 2) - POWER(5.481717, -2) * POWER("UMID_MED", 2) + POWER(1.22874, -5) * POWER("TEMP_MED", 2) * "UMID_MED" - POWER(8.5282, -4) * "TEMP_MED" * POWER("UMID_MED", 2) - POWER(1.99, -6) * POWER("TEMP_MED", 2) * POWER("UMID_MED", 2) )
             END,
-            "TEMP_MED",
-            "UMID_MED",
+            "TEMP_MED",  --temp em fahr
+            "UMID_MED", -- em decimal
             "DT_MEDICAO",
             "DC_NOME"
 FROM "INITIAL_STREAM";
